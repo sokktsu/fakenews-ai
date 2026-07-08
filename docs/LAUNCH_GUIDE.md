@@ -52,20 +52,44 @@
 
 ---
 
+## 📁 Which folder do I run commands in?
+
+Almost every command runs from one of these folders. **Each command block below is tagged with a 📁 label** telling you which one to `cd` into first.
+
+| Label | Folder | Used for |
+|---|---|---|
+| **PROJECT ROOT** | `D:\D Codes (Projects)\fakenews-ai` | Phase 0 (data/training), Phase 1 (git), Phase 3 (HF login + model uploads) |
+| **PARENT FOLDER** | `D:\D Codes (Projects)` | Phase 4.2 — cloning the Space (so it lands *next to* your project) |
+| **SPACE FOLDER** | `D:\D Codes (Projects)\fakenews-api` | Phase 4.3–4.5 — editing & pushing the Space |
+
+> [!CAUTION]
+> **Never clone or create a repo *inside* `fakenews-ai`.** That makes a broken **nested repo**. The Space (`fakenews-api`) must be a **separate sibling folder** next to `fakenews-ai`.
+
+To switch folders in a terminal (quotes required — paths have spaces):
+```cmd
+cd "D:\D Codes (Projects)\fakenews-ai"     REM  ← PROJECT ROOT
+cd "D:\D Codes (Projects)"                 REM  ← PARENT FOLDER
+cd "D:\D Codes (Projects)\fakenews-api"    REM  ← SPACE FOLDER
+```
+
+---
+
 ## 🖥️ Run it locally first
+
+> 📁 **Run from:** each subfolder below (two separate terminals).
 
 Before deploying anywhere, confirm it runs on your machine. Open **two** terminals:
 
 **Terminal 1 — Backend** (FastAPI → http://localhost:8000)
 ```powershell
-cd "C:\C Codes (Projects)\fakenews-ai\backend"
+cd "D:\D Codes (Projects)\fakenews-ai\backend"
 venv\Scripts\activate
 uvicorn main:app --reload
 ```
 
 **Terminal 2 — Frontend** (Next.js → http://localhost:3000)
 ```powershell
-cd "C:\C Codes (Projects)\fakenews-ai\frontend"
+cd "D:\D Codes (Projects)\fakenews-ai\frontend"
 npm run dev
 ```
 
@@ -85,14 +109,14 @@ A window where you type commands instead of clicking. On Windows you have Comman
 ### Open a terminal *inside the project folder* (important!)
 Almost every command must run while the terminal is "inside" the project root:
 ```
-C:\C Codes (Projects)\fakenews-ai
+D:\D Codes (Projects)\fakenews-ai
 ```
 *(Project root = the folder directly containing `backend/`, `frontend/`, `ai_models/`, `README.md`.)*
 
 **Easiest ways:**
 - **Option 1:** In File Explorer, right-click empty space inside the folder → **Open in Terminal**.
 - **Option 2:** Click the File Explorer address bar, type `cmd`, press Enter.
-- **Option 3:** In any terminal: `cd "C:\C Codes (Projects)\fakenews-ai"` *(quotes REQUIRED — the path has spaces)*.
+- **Option 3:** In any terminal: `cd "D:\D Codes (Projects)\fakenews-ai"` *(quotes REQUIRED — the path has spaces)*.
 
 **Check you're in the right place:** type `dir` — you should see `backend`, `frontend`, `ai_models`, `README.md`.
 
@@ -120,7 +144,9 @@ If git is missing: install from https://git-scm.com/download/win (all defaults),
 ## Phase 0 — Finish the models ✅
 
 > [!NOTE]
-> **This phase is already complete** — all five models are trained and evaluated. The steps below are kept for **reproducibility and retraining**. All commands run from the project root.
+> **This phase is already complete** — all five models are trained and evaluated. The steps below are kept for **reproducibility and retraining**.
+
+> 📁 **Run from: PROJECT ROOT** — `D:\D Codes (Projects)\fakenews-ai`
 
 ### 0.1 — Build the dataset
 Each collector writes its own raw CSV; only `prepare_dataset.py` merges them into `combined_dataset.csv`:
@@ -159,7 +185,7 @@ Open `ai_models/evaluation/results.json` — the **ensemble** accuracy should be
 
 ## Phase 1 — Prepare the repository
 
-*All commands in a terminal at the project root.*
+> 📁 **Run from: PROJECT ROOT** — `D:\D Codes (Projects)\fakenews-ai` (all Phase 1 commands)
 
 ### 1.1 — Turn the folder into a git repo
 ```bash
@@ -230,13 +256,13 @@ git check-ignore .env
 1. **2.1** Sign up at https://supabase.com (use **Continue with GitHub**).
 2. **2.2** New project → pick a region close to your users (**Singapore** for PH). It asks for a database password — **SAVE IT** somewhere safe (you can't see it again).
 3. **2.3** Left sidebar → **SQL Editor**. Open `database/schema.sql` from your project, copy ALL of it, paste, click **Run**. `Success. No rows returned` = it worked.
-4. **2.4** Get the connection string: **Project Settings (gear)** → **Database** → **Connection string** → **URI**.
+4. **2.4** Get the connection string: click the green **"Connect"** button at the **top of the dashboard** → the **"Direct / Connection string"** tab → **Session pooler**.
    > [!IMPORTANT]
-   > Pick the **"Session pooler"** option (port **5432**) — the direct connection is IPv6-only and fails from many hosts.
+   > **Supabase's UI changed** — there is no longer a "Settings → Database → Connection string" page. The connection string now lives behind the green **Connect** button at the top. Pick the **"Session pooler"** option (port **5432**) — the direct connection is IPv6-only and fails from many hosts. **Ignore the "Framework" tab** (that's for `supabase-js` browser apps; your FastAPI backend uses the raw connection string, not `NEXT_PUBLIC_SUPABASE_*`).
    ```
    postgresql://postgres.<ref>:<password>@aws-0-<region>.pooler.supabase.com:5432/postgres
    ```
-   Replace `<password>` with the one from 2.2. Save the full string — you'll paste it in Phase 4.4.
+   Replace `<password>` with the one from 2.2. **If your password has special characters** (`@ : / # ? & ...`), percent-encode them first: `python -c "import urllib.parse; print(urllib.parse.quote(input('pw: '), safe=''))"`. Save the full string — you'll paste it in Phase 4.4.
 5. **2.5** ⚠️ Free-tier gotcha: Supabase **pauses** projects after ~1 week with no traffic. Fixed in Phase 6.
 
 ---
@@ -248,30 +274,33 @@ git check-ignore .env
 ### 3.1 — Get a write token
 Create an account at https://huggingface.co → avatar → **Settings** → **Access Tokens** → **New token** → type **WRITE** → create. Copy it (starts with `hf_`).
 
-### 3.2 — Log in (terminal at project root)
+### 3.2 — Log in
+> 📁 **Run from: PROJECT ROOT** — `D:\D Codes (Projects)\fakenews-ai`
 ```bash
-pip install huggingface_hub
-huggingface-cli login
+pip install -U huggingface_hub
+hf auth login   # paste your hf_ token here
 ```
 > [!NOTE]
-> Pasted tokens are **invisible** in the terminal — that's a security feature. Paste and press Enter.
+> The CLI is now **`hf`** (the old `huggingface-cli login` still works but is deprecated). `hf auth login` prompts for your token — pasted tokens are **invisible** in the terminal (a security feature). Paste and press Enter.
 
 ### 3.3 — Upload each model
+> 📁 **Run from: PROJECT ROOT** — `D:\D Codes (Projects)\fakenews-ai` (paths below are relative to it)
+
 Replace `<you>` with your HF username. Run one at a time (~440 MB each for transformers):
 
 ```bash
 # Transformers (one repo each)
-huggingface-cli repo create fakenews-bert
+hf repos create fakenews-bert
 python -c "from huggingface_hub import upload_folder; upload_folder(folder_path='ai_models/bert/saved_model', repo_id='<you>/fakenews-bert')"
 
-huggingface-cli repo create fakenews-roberta
+hf repos create fakenews-roberta
 python -c "from huggingface_hub import upload_folder; upload_folder(folder_path='ai_models/roberta/saved_model', repo_id='<you>/fakenews-roberta')"
 
-huggingface-cli repo create fakenews-bert-multilingual
+hf repos create fakenews-bert-multilingual
 python -c "from huggingface_hub import upload_folder; upload_folder(folder_path='ai_models/bert_multilingual/saved_model', repo_id='<you>/fakenews-bert-multilingual')"
 
 # LSTM + LogReg are small — share one repo
-huggingface-cli repo create fakenews-small-models
+hf repos create fakenews-small-models
 python -c "from huggingface_hub import upload_folder; upload_folder(folder_path='ai_models/lstm/saved_model', repo_id='<you>/fakenews-small-models', path_in_repo='lstm')"
 python -c "from huggingface_hub import upload_folder; upload_folder(folder_path='ai_models/logistic_regression/saved_model', repo_id='<you>/fakenews-small-models', path_in_repo='logistic_regression')"
 ```
@@ -289,24 +318,53 @@ python -c "from huggingface_hub import upload_folder; upload_folder(folder_path=
 On huggingface.co: **+ New** → **Space**. Name: `fakenews-api`. SDK: **Docker** → **Blank**. Hardware: **CPU basic** (free). Create.
 
 ### 4.2 — Copy your backend into it
-In a terminal (your Documents folder is fine — **NOT** inside `fakenews-ai`):
+> 📁 **Run from: PARENT FOLDER** — `D:\D Codes (Projects)` (NOT inside `fakenews-ai`!)
+> This makes `fakenews-api` land as a **sibling** of `fakenews-ai`, not nested inside it.
 ```bash
+cd "D:\D Codes (Projects)"
 git clone https://huggingface.co/spaces/<you>/fakenews-api
 ```
-Copy everything from your project's `backend/` folder (**except `venv/`**) into the new `fakenews-api` folder. Edit its `Dockerfile` so the last line listens on port **7860** (Spaces requires it):
+After cloning you'll have:
+```
+D:\D Codes (Projects)\
+├── fakenews-ai\      ← your project (untouched)
+└── fakenews-api\     ← the Space clone (separate)
+```
+Copy the **contents** of `fakenews-ai\backend\` **into** `fakenews-api\` — so `main.py`, `Dockerfile`, `routers/`, etc. sit at the **root** of `fakenews-api`. **Do NOT copy** `venv\`, `.env`, `uploads\`, `__pycache__\` *(the Space is public — `.env` secrets go in step 4.4 instead)*.
+
+Then edit `fakenews-api\Dockerfile` so the last line listens on port **7860** (Spaces requires it):
 ```dockerfile
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "7860"]
 ```
 
 ### 4.3 — Make the Space download models on boot
+> 📁 **Edit in: SPACE FOLDER** — `D:\D Codes (Projects)\fakenews-api\main.py`
+
 Add near the top of `main.py` (before the model paths are used), with `<you>` replaced:
 ```python
+import os, shutil
 from huggingface_hub import snapshot_download
-snapshot_download("<you>/fakenews-bert",              local_dir="ai_models/bert/saved_model")
-snapshot_download("<you>/fakenews-roberta",           local_dir="ai_models/roberta/saved_model")
-snapshot_download("<you>/fakenews-bert-multilingual", local_dir="ai_models/bert_multilingual/saved_model")
-snapshot_download("<you>/fakenews-small-models",      local_dir="ai_models")
+
+for repo, dest in [
+    ("<you>/fakenews-bert",              "ai_models/bert/saved_model"),
+    ("<you>/fakenews-roberta",           "ai_models/roberta/saved_model"),
+    ("<you>/fakenews-bert-multilingual", "ai_models/bert_multilingual/saved_model"),
+]:
+    if not os.path.exists(os.path.join(dest, "config.json")):
+        snapshot_download(repo, local_dir=dest)
+
+# LSTM + LogReg share one repo (lstm/ and logistic_regression/ subfolders) —
+# remap them into the saved_model/ paths the backend loads from.
+if not os.path.exists("ai_models/lstm/saved_model/model.pt"):
+    small = snapshot_download("<you>/fakenews-small-models")
+    for sub, dest in [("lstm", "ai_models/lstm/saved_model"),
+                      ("logistic_regression", "ai_models/logistic_regression/saved_model")]:
+        os.makedirs(dest, exist_ok=True)
+        for f in os.listdir(os.path.join(small, sub)):
+            shutil.copy2(os.path.join(small, sub, f), os.path.join(dest, f))
 ```
+> [!WARNING]
+> The `fakenews-small-models` repo stores LSTM/LogReg under `lstm/` and `logistic_regression/` (no `saved_model/` level), but the backend loads from `ai_models/lstm/saved_model/` etc. The remap loop above fixes that — a plain `snapshot_download(..., local_dir="ai_models")` would put them in the wrong place and both models would silently fail to load.
 
 ### 4.4 — Set the secrets
 On the Space's page: **Settings** → **Variables and secrets** → add each as a **SECRET**:
@@ -324,8 +382,10 @@ On the Space's page: **Settings** → **Variables and secrets** → add each as 
 
 *(Plus `SMTP_*`, `ADMIN_*`, `NEWS_API_KEY`, etc. — copy values from your local `.env`.)*
 
-### 4.5 — Push the Space code (terminal inside `fakenews-api`)
+### 4.5 — Push the Space code
+> 📁 **Run from: SPACE FOLDER** — `D:\D Codes (Projects)\fakenews-api` (NOT the project root!)
 ```bash
+cd "D:\D Codes (Projects)\fakenews-api"
 git add .
 git commit -m "FastAPI backend"
 git push
