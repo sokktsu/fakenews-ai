@@ -1,0 +1,53 @@
+# ============================================================
+# FAKE NEWS AI — Backend Requirements
+# pip install -r requirements.txt
+# ============================================================
+
+# ── Web Framework ──────────────────────────────────────────
+fastapi==0.111.0
+uvicorn[standard]==0.29.0
+python-multipart==0.0.9
+httpx==0.27.0
+
+# ── Database ───────────────────────────────────────────────
+sqlalchemy==2.0.30
+alembic==1.13.1
+psycopg2-binary==2.9.9
+asyncpg==0.29.0
+
+# ── Authentication ─────────────────────────────────────────
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+pydantic==2.7.1
+pydantic-settings==2.2.1
+email-validator==2.1.1
+
+# ── AI / NLP Core ──────────────────────────────────────────
+transformers==4.41.1
+torch==2.3.0
+scikit-learn==1.5.0
+numpy==1.26.4
+pandas==2.2.2
+
+# ── NLP Utilities ──────────────────────────────────────────
+nltk==3.8.1
+textblob==0.18.0
+
+# ── OCR ────────────────────────────────────────────────────
+pytesseract==0.3.10
+Pillow==10.3.0
+easyocr==1.7.1
+
+# ── URL Processing ─────────────────────────────────────────
+beautifulsoup4==4.12.3
+lxml==5.2.1
+requests==2.31.0
+
+# ── Rate Limiting ──────────────────────────────────────────
+slowapi==0.1.9
+
+# ── Utilities ──────────────────────────────────────────────
+python-dotenv==1.0.1
+aiofiles==23.2.1
+loguru==0.7.2
+joblib==1.4.2

@@ -1,0 +1,30 @@
+# ── Secrets & environment ───────────────────────────────────────────
+# NEVER commit .env — it holds SECRET_KEY, DB URL, SMTP & admin passwords.
+.env
+.env.*
+!.env.example
+
+# ── Python ──────────────────────────────────────────────────────────
+backend/venv/
+__pycache__/
+*.pyc
+backend/uploads/
+
+# ── Node / Next.js ──────────────────────────────────────────────────
+frontend/node_modules/
+frontend/.next/
+frontend/next-env.d.ts
+
+# ── AI models & datasets ────────────────────────────────────────────
+# Too large for GitHub (100 MB/file limit). Models live on the HF Hub;
+# datasets are rebuilt by ai_models/data/prepare_dataset.py.
+# NOTE: ai_models/evaluation/results.json is intentionally NOT ignored.
+ai_models/*/saved_model/
+ai_models/data/*.csv
+ai_models/data/**/*.csv
+
+# ── Logs & OS cruft ─────────────────────────────────────────────────
+logs/
+*.log
+.DS_Store
+Thumbs.db
