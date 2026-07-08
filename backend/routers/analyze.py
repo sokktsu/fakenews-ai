@@ -27,7 +27,7 @@ class TextAnalysisRequest(BaseModel):
 
 
 class TextAnalysisResponse(BaseModel):
-    article_id:             int
+    article_id:             Optional[int] = None
     label:                  str
     confidence:             float
     ensemble_score:         float
@@ -98,30 +98,36 @@ async def analyze_text(
     sentiment  = analyze_sentiment(text)
     keywords   = get_suspicious_keywords(text)
 
-    # ── Persist to DB ─────────────────────────────────────────────────────────
-    article = AnalyzedArticle(
-        input_type              = input_type,
-        raw_text                = text[:10000],
-        source_url              = source_url,
-        title                   = source_title,
-        label                   = prediction["label"],
-        confidence              = prediction["confidence"],
-        bert_score              = prediction["bert_score"],
-        roberta_score           = prediction["roberta_score"],
-        bert_multilingual_score = prediction["bert_multilingual_score"],
-        lstm_score              = prediction["lstm_score"],
-        logistic_score          = prediction["logistic_score"],
-        ensemble_score          = prediction["ensemble_score"],
-        sentiment               = sentiment["label"],
-        sentiment_score         = sentiment["score"],
-        keywords                = keywords,
-    )
-    db.add(article)
-    await db.commit()
-    await db.refresh(article)
+    # ── Persist to DB (best-effort — a DB issue must NOT fail the prediction) ──
+    article_id = None
+    try:
+        article = AnalyzedArticle(
+            input_type              = input_type,
+            raw_text                = text[:10000],
+            source_url              = source_url,
+            title                   = source_title,
+            label                   = prediction["label"],
+            confidence              = prediction["confidence"],
+            bert_score              = prediction["bert_score"],
+            roberta_score           = prediction["roberta_score"],
+            bert_multilingual_score = prediction["bert_multilingual_score"],
+            lstm_score              = prediction["lstm_score"],
+            logistic_score          = prediction["logistic_score"],
+            ensemble_score          = prediction["ensemble_score"],
+            sentiment               = sentiment["label"],
+            sentiment_score         = sentiment["score"],
+            keywords                = keywords,
+        )
+        db.add(article)
+        await db.commit()
+        await db.refresh(article)
+        article_id = article.id
+    except Exception as _e:
+        await db.rollback()
+        logger.warning(f"Analysis not persisted (returning result anyway): {_e!r}")
 
     return TextAnalysisResponse(
-        article_id              = article.id,
+        article_id              = article_id,
         label                   = prediction["label"],
         confidence              = prediction["confidence"],
         ensemble_score          = prediction["ensemble_score"],

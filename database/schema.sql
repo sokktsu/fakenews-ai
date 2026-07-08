@@ -28,6 +28,8 @@ CREATE TABLE IF NOT EXISTS analyzed_articles (
     label           VARCHAR(10) NOT NULL,     -- REAL | FAKE
     confidence      FLOAT NOT NULL,
     bert_score      FLOAT,
+    roberta_score   FLOAT,
+    bert_multilingual_score FLOAT,
     lstm_score      FLOAT,
     logistic_score  FLOAT,
     ensemble_score  FLOAT,
@@ -36,6 +38,11 @@ CREATE TABLE IF NOT EXISTS analyzed_articles (
     keywords        JSONB,
     created_at      TIMESTAMPTZ DEFAULT NOW()
 );
+
+-- Migration: add score columns for RoBERTa & multilingual BERT on pre-existing tables
+-- (safe to run repeatedly; CREATE TABLE above already includes them for fresh installs)
+ALTER TABLE analyzed_articles ADD COLUMN IF NOT EXISTS roberta_score FLOAT;
+ALTER TABLE analyzed_articles ADD COLUMN IF NOT EXISTS bert_multilingual_score FLOAT;
 
 -- Uploaded Images
 CREATE TABLE IF NOT EXISTS uploaded_images (
