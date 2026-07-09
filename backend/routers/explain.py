@@ -86,6 +86,8 @@ def _generate_explanation(article: AnalyzedArticle) -> dict:
             )
         parts.append(
             f"**Model Scores:** BERT: {article.bert_score:.2%} | "
+            f"RoBERTa: {(article.roberta_score or 0):.2%} | "
+            f"mBERT: {(article.bert_multilingual_score or 0):.2%} | "
             f"LSTM: {article.lstm_score:.2%} | "
             f"Logistic Regression: {article.logistic_score:.2%}"
         )
@@ -104,6 +106,8 @@ def _generate_explanation(article: AnalyzedArticle) -> dict:
             parts.append("**Objective Language:** The article uses measured, factual language without excessive emotional manipulation.")
         parts.append(
             f"**Model Scores:** BERT: {article.bert_score:.2%} | "
+            f"RoBERTa: {(article.roberta_score or 0):.2%} | "
+            f"mBERT: {(article.bert_multilingual_score or 0):.2%} | "
             f"LSTM: {article.lstm_score:.2%} | "
             f"Logistic Regression: {article.logistic_score:.2%}"
         )
