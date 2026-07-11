@@ -42,9 +42,14 @@ export default function Footer() {
             </a>
           ))}
         </div>
-        <p className="text-ink/40 text-xs">
-          © 2024 FakeNewsAI Thesis Project. All rights reserved.
-        </p>
+        <div className="flex items-center gap-4 text-xs">
+          <a href="/terms" className="text-ink/40 hover:text-ink transition-colors underline-offset-2 hover:underline">
+            Terms of Service
+          </a>
+          <p className="text-ink/40">
+            © 2026 FakeNewsAI Thesis Project. All rights reserved.
+          </p>
+        </div>
       </div>
     </footer>
   )

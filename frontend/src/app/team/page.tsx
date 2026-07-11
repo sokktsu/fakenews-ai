@@ -11,7 +11,6 @@ const ADVISER = {
   name:  'Prof. [Adviser Name]',
   role:  'Thesis Adviser',
   dept:  'Department of Computer Science',
-  bio:   'Specializes in Natural Language Processing, Machine Learning, and AI Ethics. Has guided numerous research projects in computational linguistics and information systems.',
   avatar: '👨‍🏫',
   color:  'from-primary-500 to-primary-700',
 }
@@ -19,8 +18,6 @@ const ADVISER = {
 const TEAM_MEMBERS = [
   {
     name:   '[Team Member 1]',
-    role:   'Lead Developer / AI Engineer',
-    contrib:'Developed the BERT fine-tuning pipeline, ensemble architecture, and FastAPI backend.',
     avatar: '👨‍💻',
     color:  'from-accent-cyan to-teal-600',
     github: '#',
@@ -29,8 +26,6 @@ const TEAM_MEMBERS = [
   },
   {
     name:   '[Team Member 2]',
-    role:   'Frontend Developer / UI Designer',
-    contrib:'Designed and built the Next.js frontend, UI/UX system, and data visualizations.',
     avatar: '👩‍🎨',
     color:  'from-accent-magenta to-rose-600',
     github: '#',
@@ -39,20 +34,8 @@ const TEAM_MEMBERS = [
   },
   {
     name:   '[Team Member 3]',
-    role:   'NLP Researcher / Data Scientist',
-    contrib:'Led data collection, preprocessing pipeline, LSTM model training, and evaluation.',
     avatar: '👨‍🔬',
     color:  'from-amber-500 to-orange-600',
-    github: '#',
-    linkedin: '#',
-    email: '#',
-  },
-  {
-    name:   '[Team Member 4]',
-    role:   'Backend Developer / Database Engineer',
-    contrib:'Architected the PostgreSQL schema, RESTful API endpoints, and deployment pipeline.',
-    avatar: '👩‍💻',
-    color:  'from-violet-500 to-purple-700',
     github: '#',
     linkedin: '#',
     email: '#',
@@ -90,8 +73,7 @@ export default function TeamPage() {
             <div>
               <h3 className="font-display font-700 text-ink text-2xl mb-1">{ADVISER.name}</h3>
               <p className="text-primary-600 dark:text-primary-400 font-mono text-sm mb-1">{ADVISER.role}</p>
-              <p className="text-ink/40 text-sm mb-4">{ADVISER.dept}</p>
-              <p className="text-ink/60 leading-relaxed">{ADVISER.bio}</p>
+              <p className="text-ink/40 text-sm">{ADVISER.dept}</p>
             </div>
           </div>
         </motion.div>
@@ -102,7 +84,7 @@ export default function TeamPage() {
             <Users className="w-5 h-5 text-accent-cyan" />
             <h2 className="font-display font-700 text-ink text-xl">Researchers</h2>
           </div>
-          <div className="grid sm:grid-cols-2 gap-6">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {TEAM_MEMBERS.map((member, i) => (
               <motion.div
                 key={i}
@@ -112,28 +94,22 @@ export default function TeamPage() {
                 transition={{ delay: i * 0.1 }}
                 className="glass card-hover p-6 rounded-xl"
               >
-                <div className="flex items-start gap-4">
+                <div className="flex flex-col items-center text-center gap-4">
                   <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${member.color} flex items-center justify-center text-2xl flex-shrink-0`}>
                     {member.avatar}
                   </div>
-                  <div className="flex-1">
-                    <h3 className="font-display font-700 text-ink text-lg leading-tight">{member.name}</h3>
-                    <p className={`text-sm font-mono mb-3 text-transparent bg-clip-text bg-gradient-to-r ${member.color}`}>
-                      {member.role}
-                    </p>
-                    <p className="text-ink/50 text-sm leading-relaxed mb-4">{member.contrib}</p>
-                    <div className="flex items-center gap-2">
-                      {[
-                        { icon: <Github className="w-4 h-4" />,   href: member.github,   label: 'GitHub' },
-                        { icon: <Linkedin className="w-4 h-4" />, href: member.linkedin, label: 'LinkedIn' },
-                        { icon: <Mail className="w-4 h-4" />,     href: member.email,    label: 'Email' },
-                      ].map((link) => (
-                        <a key={link.label} href={link.href} aria-label={link.label}
-                          className="w-8 h-8 glass rounded-lg flex items-center justify-center text-ink/40 hover:text-primary-500 transition-colors">
-                          {link.icon}
-                        </a>
-                      ))}
-                    </div>
+                  <h3 className="font-display font-700 text-ink text-lg leading-tight">{member.name}</h3>
+                  <div className="flex items-center gap-2">
+                    {[
+                      { icon: <Github className="w-4 h-4" />,   href: member.github,   label: 'GitHub' },
+                      { icon: <Linkedin className="w-4 h-4" />, href: member.linkedin, label: 'LinkedIn' },
+                      { icon: <Mail className="w-4 h-4" />,     href: member.email,    label: 'Email' },
+                    ].map((link) => (
+                      <a key={link.label} href={link.href} aria-label={link.label}
+                        className="w-8 h-8 glass rounded-lg flex items-center justify-center text-ink/40 hover:text-primary-500 transition-colors">
+                        {link.icon}
+                      </a>
+                    ))}
                   </div>
                 </div>
               </motion.div>
