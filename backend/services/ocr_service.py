@@ -1,9 +1,12 @@
 """
 OCR Service — Tesseract + EasyOCR fallback
 """
-import pytesseract
-pytesseract.pytesseract.tesseract_cmd = r"C:\C Codes (Apps)\Tesseract-OCR\tesseract.exe"
 import os
+import pytesseract
+# On Windows point at the local install; on Linux (HF Space) tesseract is on PATH.
+_WIN_TESSERACT = r"C:\C Codes (Apps)\Tesseract-OCR\tesseract.exe"
+if os.path.exists(_WIN_TESSERACT):
+    pytesseract.pytesseract.tesseract_cmd = _WIN_TESSERACT
 from loguru import logger
 
 

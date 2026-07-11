@@ -21,6 +21,8 @@ from loguru import logger
 import shutil, threading
 from huggingface_hub import snapshot_download
 
+load_dotenv()  # load .env early so the download guard below sees *_MODEL_PATH
+
 
 def _boot(msg):
     print(f"[boot] {msg}", flush=True)
@@ -29,19 +31,26 @@ def _boot(msg):
 def _download_models():
     _boot("Ensuring models are present...")
     try:
-        for repo, dest in [
-            ("sokktsu/fakenews-bert",              "ai_models/bert/saved_model"),
-            ("sokktsu/fakenews-roberta",           "ai_models/roberta/saved_model"),
-            ("sokktsu/fakenews-bert-multilingual", "ai_models/bert_multilingual/saved_model"),
+        for repo, env_var, dest in [
+            ("sokktsu/fakenews-bert",              "BERT_MODEL_PATH",              "ai_models/bert/saved_model"),
+            ("sokktsu/fakenews-roberta",           "ROBERTA_MODEL_PATH",           "ai_models/roberta/saved_model"),
+            ("sokktsu/fakenews-bert-multilingual", "BERT_MULTILINGUAL_MODEL_PATH", "ai_models/bert_multilingual/saved_model"),
         ]:
-            if not os.path.exists(os.path.join(dest, "config.json")):
-                _boot(f"Downloading {repo}")
-                snapshot_download(repo, local_dir=dest)
-                _boot(f"Done {repo}")
+            # Skip if the model already exists at the configured path (local dev
+            # with locally-trained models) or at the default download destination.
+            configured = os.getenv(env_var, dest)
+            if os.path.exists(os.path.join(configured, "config.json")) or \
+               os.path.exists(os.path.join(dest, "config.json")):
+                continue
+            _boot(f"Downloading {repo}")
+            snapshot_download(repo, local_dir=dest)
+            _boot(f"Done {repo}")
 
         # LSTM + LogReg share one repo (lstm/ and logistic_regression/ subfolders);
         # copy each subfolder's files into the saved_model/ path the loader expects.
-        if not os.path.exists("ai_models/lstm/saved_model/model.pt"):
+        lstm_configured = os.getenv("LSTM_MODEL_PATH", "ai_models/lstm/saved_model")
+        if not (os.path.exists(os.path.join(lstm_configured, "model.pt")) or
+                os.path.exists("ai_models/lstm/saved_model/model.pt")):
             _boot("Downloading sokktsu/fakenews-small-models")
             small = snapshot_download("sokktsu/fakenews-small-models")
             for sub, dest in [("lstm", "ai_models/lstm/saved_model"),
