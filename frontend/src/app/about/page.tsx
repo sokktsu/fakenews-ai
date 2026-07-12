@@ -1,6 +1,7 @@
 'use client'
+import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { Target, BookOpen, Lightbulb, BarChart3, Shield, Brain } from 'lucide-react'
+import { Sparkles, ScanSearch, Brain, HeartHandshake, ShieldAlert, Users, ArrowRight } from 'lucide-react'
 
 const fadeUp = {
   hidden:  { opacity: 0, y: 30 },
@@ -18,82 +19,110 @@ export default function AboutPage() {
         {/* Header */}
         <motion.div variants={stagger} initial="hidden" animate="visible" className="text-center mb-16">
           <motion.div variants={fadeUp} className="inline-flex items-center gap-2 glass px-4 py-2 rounded-full text-xs font-mono text-primary-600 dark:text-primary-300 mb-6">
-            <BookOpen className="w-3 h-3" /> Thesis Documentation
+            <Sparkles className="w-3 h-3" /> About the Project
           </motion.div>
           <motion.h1 variants={fadeUp} className="text-4xl sm:text-5xl font-display font-800 text-ink mb-4">
-            About This <span className="text-gradient">Research</span>
+            Fighting Fake News <span className="text-gradient">with AI</span>
           </motion.h1>
           <motion.p variants={fadeUp} className="text-ink/50 text-lg max-w-2xl mx-auto">
-            A comprehensive study on leveraging Artificial Intelligence to detect and combat fake news in the digital age.
+            A free tool that helps you check whether a news article is likely real or fake — in seconds, powered by artificial intelligence.
           </motion.p>
         </motion.div>
 
-        {/* Thesis Background */}
-        <motion.section initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="glass-strong p-8 mb-8">
-          <div className="flex items-center gap-3 mb-5">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center">
-              <BookOpen className="w-5 h-5 text-white" />
-            </div>
-            <h2 className="text-2xl font-display font-700 text-ink">Background</h2>
-          </div>
-          <div className="space-y-4 text-ink/60 leading-relaxed">
-            <p>
-              The proliferation of fake news has become one of the most pressing challenges of the digital era. 
-              Social media platforms and online news aggregators have amplified misinformation at an unprecedented scale, 
-              influencing public opinion, political discourse, and even public health decisions.
-            </p>
-            <p>
-              This thesis presents an AI-driven solution that combines Natural Language Processing (NLP) and Deep Learning 
-              to automatically detect fake news with high accuracy. By leveraging state-of-the-art transformer models 
-              alongside traditional machine learning approaches, we achieve a robust ensemble system.
-            </p>
-            <p>
-              The system was developed in the context of the Philippine information landscape, where misinformation 
-              poses unique societal challenges, particularly during election seasons and public health crises.
-            </p>
-          </div>
-        </motion.section>
-
-        {/* Objectives */}
+        {/* How It Works */}
         <motion.section initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="glass-strong p-8 mb-8">
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-accent-cyan to-teal-600 flex items-center justify-center">
-              <Target className="w-5 h-5 text-white" />
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center">
+              <ScanSearch className="w-5 h-5 text-white" />
             </div>
-            <h2 className="text-2xl font-display font-700 text-ink">Objectives</h2>
+            <h2 className="text-2xl font-display font-700 text-ink">How It Works</h2>
           </div>
-          <div className="grid sm:grid-cols-2 gap-4">
+          <div className="space-y-4">
             {[
-              'Develop an ensemble AI model combining BERT, LSTM, and Logistic Regression for fake news classification',
-              'Achieve at least 90% classification accuracy on benchmark fake news datasets',
-              'Build an explainable AI system that highlights suspicious content and reasoning',
-              'Create an accessible web platform for real-time fake news detection',
-              'Implement OCR-based image analysis to detect misinformation in visual media',
-              'Establish a self-learning feedback mechanism to continuously improve model performance',
-            ].map((obj, i) => (
-              <div key={i} className="flex items-start gap-3 glass p-4 rounded-xl">
-                <span className="w-6 h-6 rounded-full bg-primary-500/20 text-primary-600 dark:text-primary-400 text-xs font-mono flex items-center justify-center flex-shrink-0 mt-0.5">
-                  {i + 1}
-                </span>
-                <p className="text-ink/60 text-sm leading-relaxed">{obj}</p>
+              { step: 'Paste or upload', desc: 'Drop in a news article, a link, or even a screenshot of a post — our system can read text straight from images.' },
+              { step: 'AI analyzes it', desc: 'Five AI models read the article and each give their own verdict based on how it’s written.' },
+              { step: 'Get an explained result', desc: 'You see a REAL or FAKE prediction with a confidence score, plus the exact phrases that raised red flags — so you’re not just trusting a black box.' },
+            ].map((item, i) => (
+              <div key={i} className="flex gap-4">
+                <div className="flex flex-col items-center">
+                  <div className="w-8 h-8 rounded-full bg-primary-500/20 text-primary-600 dark:text-primary-400 text-sm font-mono font-600 flex items-center justify-center flex-shrink-0">
+                    {i + 1}
+                  </div>
+                  {i < 2 && <div className="w-px flex-1 bg-ink/10 my-2" />}
+                </div>
+                <div className="pb-4">
+                  <h4 className="font-display font-600 text-ink mb-1">{item.step}</h4>
+                  <p className="text-ink/50 text-sm leading-relaxed">{item.desc}</p>
+                </div>
               </div>
             ))}
           </div>
+          <Link href="/" className="inline-flex items-center gap-2 text-primary-600 dark:text-primary-400 text-sm font-600 hover:gap-3 transition-all">
+            Try the analyzer <ArrowRight className="w-4 h-4" />
+          </Link>
         </motion.section>
 
-        {/* Significance */}
+        {/* What Powers It */}
+        <motion.section initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="glass-strong p-8 mb-8">
+          <div className="flex items-center gap-3 mb-5">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-accent-cyan to-teal-600 flex items-center justify-center">
+              <Brain className="w-5 h-5 text-white" />
+            </div>
+            <h2 className="text-2xl font-display font-700 text-ink">What Powers It</h2>
+          </div>
+          <div className="space-y-4 text-ink/60 leading-relaxed">
+            <p>
+              Behind the scenes, this site runs an <span className="font-600 text-ink">ensemble</span> — five AI models
+              working together, like a panel of judges. Three are modern language-understanding models (BERT, RoBERTa,
+              and a multilingual model that also handles Filipino text), backed by two classic machine learning models.
+              Each judge votes, the votes are weighted, and you get one combined verdict.
+            </p>
+            <p>
+              In testing, the ensemble correctly classified about 98% of articles from standard research datasets.
+            </p>
+          </div>
+          <Link href="/resources" className="inline-flex items-center gap-2 text-primary-600 dark:text-primary-400 text-sm font-600 mt-5 hover:gap-3 transition-all">
+            Curious about the technical details? See our AI Models page <ArrowRight className="w-4 h-4" />
+          </Link>
+        </motion.section>
+
+        {/* Why We Built It */}
         <motion.section initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="glass-strong p-8 mb-8">
           <div className="flex items-center gap-3 mb-5">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-accent-magenta to-rose-700 flex items-center justify-center">
-              <Lightbulb className="w-5 h-5 text-white" />
+              <HeartHandshake className="w-5 h-5 text-white" />
             </div>
-            <h2 className="text-2xl font-display font-700 text-ink">Significance of the Study</h2>
+            <h2 className="text-2xl font-display font-700 text-ink">Why We Built It</h2>
           </div>
+          <div className="space-y-4 text-ink/60 leading-relaxed">
+            <p>
+              In the Philippines, fake news spreads fastest exactly when the truth matters most — during elections and
+              public health crises. Fact-checkers can&apos;t keep up with the volume, and most detection tools aren&apos;t
+              built with Filipino readers in mind.
+            </p>
+            <p>
+              We built this platform to give everyone a free, fast first line of defense: a way to pause and check
+              before you believe or share.
+            </p>
+          </div>
+        </motion.section>
+
+        {/* Accuracy & Limitations */}
+        <motion.section initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="glass-strong p-8 mb-8">
+          <div className="flex items-center gap-3 mb-5">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center">
+              <ShieldAlert className="w-5 h-5 text-white" />
+            </div>
+            <h2 className="text-2xl font-display font-700 text-ink">Accuracy &amp; Limitations</h2>
+          </div>
+          <p className="text-ink/60 leading-relaxed mb-5">
+            No AI is perfect, and ours is no exception. A few honest notes:
+          </p>
           <div className="grid sm:grid-cols-3 gap-4">
             {[
-              { title: 'To Society', desc: 'Empowers citizens to critically evaluate news content and make informed decisions based on verified information.' },
-              { title: 'To Journalism', desc: 'Supports fact-checkers and journalists with AI-assisted verification tools, reducing manual verification workload.' },
-              { title: 'To AI Research', desc: 'Contributes a novel ensemble approach combining multiple deep learning architectures with explainable AI.' },
+              { title: 'Tested on research data', desc: 'Our accuracy figures come from testing on standard research datasets; real-world articles can be trickier.' },
+              { title: 'Style, not facts', desc: 'The AI judges how an article is written, not whether each fact in it is true. A well-written lie can slip through; an oddly-written truth can get flagged.' },
+              { title: 'A second opinion', desc: 'Treat the result as a second opinion, not a final verdict. When in doubt, check trusted fact-checkers like VERA Files, Rappler Fact Check, or Tsek.ph.' },
             ].map((item) => (
               <div key={item.title} className="glass p-5 rounded-xl">
                 <h3 className="font-display font-600 text-primary-600 dark:text-primary-300 mb-2">{item.title}</h3>
@@ -103,37 +132,21 @@ export default function AboutPage() {
           </div>
         </motion.section>
 
-        {/* Methodology */}
+        {/* Who We Are */}
         <motion.section initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="glass-strong p-8 mb-8">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center">
-              <BarChart3 className="w-5 h-5 text-white" />
+          <div className="flex items-center gap-3 mb-5">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center">
+              <Users className="w-5 h-5 text-white" />
             </div>
-            <h2 className="text-2xl font-display font-700 text-ink">Methodology</h2>
+            <h2 className="text-2xl font-display font-700 text-ink">Who We Are</h2>
           </div>
-          <div className="space-y-4">
-            {[
-              { phase: 'Phase 1: Data Collection', desc: 'Collected fake and real news articles from LIAR dataset, FakeNewsNet, and WELFake dataset totaling 70,000+ labeled samples.' },
-              { phase: 'Phase 2: Preprocessing', desc: 'Text cleaning, tokenization, stopword removal, lemmatization using NLTK and SpaCy. Applied data augmentation for class balancing.' },
-              { phase: 'Phase 3: Model Training', desc: 'Fine-tuned BERT-base-uncased on the dataset. Trained BiLSTM with GloVe embeddings. Fitted TF-IDF + Logistic Regression baseline.' },
-              { phase: 'Phase 4: Ensemble', desc: 'Combined predictions using weighted voting: BERT(60%) + LSTM(25%) + LogReg(15%), calibrated using validation set performance.' },
-              { phase: 'Phase 5: Explainability', desc: 'Integrated SHAP values, BERT attention visualization, and keyword highlighting for human-interpretable explanations.' },
-              { phase: 'Phase 6: Evaluation', desc: 'Evaluated on held-out test sets using Accuracy, Precision, Recall, F1-Score, and ROC-AUC metrics.' },
-            ].map((step, i) => (
-              <div key={i} className="flex gap-4">
-                <div className="flex flex-col items-center">
-                  <div className="w-8 h-8 rounded-full bg-primary-500/20 text-primary-600 dark:text-primary-400 text-sm font-mono font-600 flex items-center justify-center flex-shrink-0">
-                    {i + 1}
-                  </div>
-                  {i < 5 && <div className="w-px flex-1 bg-ink/10 my-2" />}
-                </div>
-                <div className="pb-4">
-                  <h4 className="font-display font-600 text-ink mb-1">{step.phase}</h4>
-                  <p className="text-ink/50 text-sm leading-relaxed">{step.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
+          <p className="text-ink/60 leading-relaxed">
+            This platform was developed as an undergraduate thesis project by computer science students, driven by a
+            shared goal: making the fight against misinformation accessible to every Filipino.
+          </p>
+          <Link href="/team" className="inline-flex items-center gap-2 text-primary-600 dark:text-primary-400 text-sm font-600 mt-5 hover:gap-3 transition-all">
+            Meet the team <ArrowRight className="w-4 h-4" />
+          </Link>
         </motion.section>
       </div>
     </div>
