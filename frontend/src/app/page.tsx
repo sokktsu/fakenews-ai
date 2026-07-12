@@ -176,29 +176,17 @@ function ResultCard({ result, onExplain }: { result: PredictionResult; onExplain
 // ── Explanation panel ─────────────────────────────────────────────────────────
 function ExplanationPanel({ articleId }: { articleId: number }) {
   const [data, setData] = useState<any>(null)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
-  const load = async () => {
-    if (data) return
-    setLoading(true)
-    try {
-      const result = await getExplanation(articleId)
-      setData(result)
-    } catch {
-      setError('Could not load explanation.')
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  if (!data && !loading) {
-    return (
-      <button onClick={load} className="w-full glass rounded-xl p-4 text-ink/50 hover:text-ink/80 text-sm transition-colors flex items-center justify-center gap-2">
-        <Brain className="w-4 h-4" /> Load full explanation
-      </button>
-    )
-  }
+  useEffect(() => {
+    let cancelled = false
+    getExplanation(articleId)
+      .then((result) => { if (!cancelled) setData(result) })
+      .catch(() => { if (!cancelled) setError('Could not load explanation.') })
+      .finally(() => { if (!cancelled) setLoading(false) })
+    return () => { cancelled = true }
+  }, [articleId])
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="glass rounded-xl p-5 space-y-4 text-left">

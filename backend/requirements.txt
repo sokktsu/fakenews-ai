@@ -25,7 +25,7 @@ email-validator==2.1.1
 # ── AI / NLP Core ──────────────────────────────────────────
 transformers==4.41.1
 torch==2.3.0
-scikit-learn==1.5.0
+scikit-learn==1.8.0   # must match the version the LogReg/TF-IDF pickles were trained with
 numpy==1.26.4
 pandas==2.2.2
 
