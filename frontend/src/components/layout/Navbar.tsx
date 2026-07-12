@@ -10,7 +10,7 @@ const NAV_LINKS = [
   { href: '/resources',      label: 'Resources' },
   { href: '/community',      label: 'Community' },
   { href: '/team',           label: 'Team' },
-  // { href: '/contact',        label: 'Contact' },  // disabled for now
+  { href: '/contact',        label: 'Contact', disabled: true },  // set disabled: false to re-enable
 ]
 
 export default function Navbar() {
@@ -32,17 +32,28 @@ export default function Navbar() {
           <div className="hidden lg:flex items-center gap-1">
             <nav className="flex items-center">
               {NAV_LINKS.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={`px-3 py-2 rounded-md text-sm transition-colors ${
-                    pathname === link.href
-                      ? 'text-ink font-semibold'
-                      : 'text-ink/60 hover:text-ink'
-                  }`}
-                >
-                  {link.label}
-                </Link>
+                link.disabled ? (
+                  <span
+                    key={link.href}
+                    aria-disabled="true"
+                    title="Coming soon"
+                    className="px-3 py-2 rounded-md text-sm text-ink/25 cursor-not-allowed select-none"
+                  >
+                    {link.label}
+                  </span>
+                ) : (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className={`px-3 py-2 rounded-md text-sm transition-colors ${
+                      pathname === link.href
+                        ? 'text-ink font-semibold'
+                        : 'text-ink/60 hover:text-ink'
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                )
               ))}
             </nav>
             <ThemeToggle />
@@ -67,17 +78,27 @@ export default function Navbar() {
         <div className="lg:hidden bg-card border-t border-ink/10">
           <div className="px-4 py-3 space-y-1">
             {NAV_LINKS.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`block px-4 py-2.5 rounded-md text-sm transition-colors ${
-                  pathname === link.href
-                    ? 'text-ink font-semibold bg-ink/5'
-                    : 'text-ink/60 hover:text-ink hover:bg-ink/5'
-                }`}
-              >
-                {link.label}
-              </Link>
+              link.disabled ? (
+                <span
+                  key={link.href}
+                  aria-disabled="true"
+                  className="block px-4 py-2.5 rounded-md text-sm text-ink/25 cursor-not-allowed select-none"
+                >
+                  {link.label}
+                </span>
+              ) : (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`block px-4 py-2.5 rounded-md text-sm transition-colors ${
+                    pathname === link.href
+                      ? 'text-ink font-semibold bg-ink/5'
+                      : 'text-ink/60 hover:text-ink hover:bg-ink/5'
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              )
             ))}
           </div>
         </div>
