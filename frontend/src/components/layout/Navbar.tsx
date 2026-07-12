@@ -10,7 +10,7 @@ const NAV_LINKS = [
   { href: '/resources',      label: 'Resources' },
   { href: '/community',      label: 'Community' },
   { href: '/team',           label: 'Team' },
-  { href: '/contact',        label: 'Contact' },
+  // { href: '/contact',        label: 'Contact' },  // disabled for now
 ]
 
 export default function Navbar() {
